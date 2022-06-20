@@ -1,6 +1,7 @@
 # Assignment 2 Exercises 4-6
 # Exercise 4 - Build a Binary Search Tree - Code Insert() and Find()
 
+import time
 class BinarySearchTree:
     def __init__(self, root):
         self.root = Node(root)
@@ -128,6 +129,39 @@ class BinarySearchTreePhoneBook:
             return self.tree.find(name)
 
 # Exercise 6
+def testPhoneBook(phoneBook):
+    tic = time.perf_counter()
+    with open('data.csv') as f:
+        while True:
+            line = f.readline()
+            if not line: 
+                break
+            entry = line.split(',')
+            phoneBook.insert(entry[0], entry[1])
+    print("Insert took " + str(time.perf_counter() - tic) + " seconds")
+    print(phoneBook.size)
 
+    tic = time.perf_counter()
+    totalFound = 0
+    with open('search.txt') as g:
+        while True:
+            line = g.readline()
+            if not line: 
+                break
 
- 
+            if phoneBook.find(line.strip()) == -1:
+                print(totalFound)
+                raise ValueError("Not found")
+            else:
+                totalFound += 1
+    print("Search took " + str(time.perf_counter() - tic) + " seconds")
+    print(totalFound)
+
+print("Testing ListPhoneBook: ")
+lpb = ListPhoneBook()
+testPhoneBook(lpb)
+
+# issue with the comparator -- in python you cannot use <,>,= to cmp strings
+print("Testing BinarySearchTreePhoneBook: ")
+bstpb = BinarySearchTreePhoneBook()
+testPhoneBook(bstpb)
