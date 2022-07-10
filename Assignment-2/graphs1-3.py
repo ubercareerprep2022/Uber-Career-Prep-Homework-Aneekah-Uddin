@@ -60,5 +60,61 @@ class GraphWithAdjacencyList:
                 for n in self.adj_list[node]:
                     queue.append(n)
 
+# Exercise 4 - Minimum number of edges between two nodes of a Graph
+    # perform BFS and keep track of edge count, until you find the right node
 
-    
+    def minNumberOfEdges(self, start, target):
+        # add the first nodes edges to queue
+        nextLevelNodes = self.adj_list[start]
+        count = 1
+        # increase count by one
+        # iterate through the queue
+        while (nextLevelNodes):
+            # iterate thru that level
+            currLevelLength = len(nextLevelNodes)
+            for i in range(currLevelLength):
+                # if found, return count
+                if nextLevelNodes[0].val == target.val:
+                    return count
+                # else, add the nodes in the adj list
+                else:
+                    nextLevelNodes.append(self.adj_list[nextLevelNodes[0]])
+                nextLevelNodes.pop(0)
+            # update the count
+            count += 1    
+        # return -1 if not found
+        return -1
+
+# Exercise 5 - Loop in a Directed Graph
+    def validCourses(numCourses, prereqs):
+        # put information into a graph structure w / adj list
+        adj_list = [0] * len(numCourses) * len(numCourses)
+        inDegree = [0] * len(numCourses)
+        visited = [0] * len(numCourses)
+
+        for prereq in prereqs:
+            adj_list[ (prereq[0] * len(numCourses)) + prereq[1]] = 1
+            inDegree[prereq[1]] += 1
+
+        # topological sort not possible in rooted DAG - if indeg of any number is greater than 0 after finishing
+        queue = []
+        for i in range(numCourses):
+            if (inDegree[i] == 0):
+                queue.append(i)
+                visited[i] = True
+        
+        while queue:
+            curr = queue.pop(0)
+            for i in range(numCourses):
+                if adj_list(curr * len(numCourses) + i) and visited(i) == False:
+                    inDegree[i] -= 1
+                    if inDegree[i] == 0:
+                        visited[i] = True
+                        queue.append(i)
+        
+        for i in range(numCourses):
+            if inDegree[i] != 0:
+                return False
+        
+        return True
+
